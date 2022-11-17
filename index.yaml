@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  rosita-chatbot:
+  - apiVersion: v2
+    appVersion: 3.7.0
+    created: "2022-11-17T21:39:49.7034562+05:30"
+    description: Deployment of rosita-chatbot on K8s
+    digest: 428f497a48983ab1c3c38e6e3838241600a1b9fbdf7e995b3de2ff37990dcbef
+    name: rosita-chatbot
+    type: application
+    urls:
+    - https://github.com/mohdalmas/helm-test/rosita-chatbot-1.0.0.tgz
+    version: 1.0.0
+generated: "2022-11-17T21:39:49.6982246+05:30"

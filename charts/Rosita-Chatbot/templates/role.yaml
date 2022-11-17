@@ -1,0 +1,25 @@
+{{- if .Values.rbac.create }}
+# kubernetes_plugin: Give access to pods endpoint
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "rosita-chatbot.fullname" . }}:rosita-chatbot:{{ .Release.Namespace }}
+  labels:
+    {{- include "rosita-chatbot.labels" . | nindent 4 }}
+rules:
+  - apiGroups: 
+    {{- with .Values.rbac.apiGroups }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    resources: 
+    {{- with .Values.rbac.resources }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    verbs: 
+    {{- with .Values.rbac.verbs }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.rbac.extraRules }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- end }}

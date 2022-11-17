@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "rosita-chatbot.fullname" . }}-rosita-chatbot
+  labels:
+    {{- include "rosita-chatbot.labels" . | nindent 4 }}
+    component: rosita-chatbot
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "rosita-chatbot.selectorLabels" . | nindent 6 }}
+      component: rosita-chatbot
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "rosita-chatbot.selectorLabels" . | nindent 8 }}
+        component: rosita-chatbot
+    spec:
+      serviceAccountName: {{ include "rosita-chatbot.fullname" . }}
+      {{- if .Values.securityContext.enabled }}
+      securityContext: {{- omit .Values.securityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
+{{- if .Values.imagePullSecret }}
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecret }}
+{{- end }}
+      containers:
+        - name: rosita-chatbot
+          image: "{{ .Values.rositaChatbot.image.repository }}:{{ .Values.rositaChatbot.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.rositaChatbot.pullPolicy }}
+          resources:
+          {{- toYaml .Values.rositaChatbot.resources | nindent 12 }}
+          ports: 
+          {{-  range .Values.rositaChatbot.service.ports }}
+          - name: {{ .name }}
+            containerPort: {{ .port }}
+          {{- end }}
+          env:
+            {{ if .Values.extraEnvValues }}
+            {{ toYaml .Values.rositaChatbot.extraEnvValues | nindent 6  }}
+            {{- end }}
+          volumeMounts:
+            - mountPath: {{ .Values.azureFileStorage.mountPath}}
+              name: fileshare-data
+      volumes:
+        - name: fileshare-data
+          azureFile:
+            {{- if .Values.azureFileStorage.create }}
+            secretName: {{ include "rosita-chatbot.fullname" . }}
+            {{- else}}
+            secretName: {{ .Values.azureFileStorage.existingStorageSecret }}
+            {{- end }}
+            shareName: {{ .Values.azureFileStorage.storageName}}

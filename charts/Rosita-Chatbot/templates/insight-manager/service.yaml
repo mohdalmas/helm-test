@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "rosita-chatbot.fullname" . }}-insight-manager
+  labels:
+    {{- include "rosita-chatbot.labels" . | nindent 4 }}
+    component: insight-manager
+  annotations:
+    {{- toYaml .Values.insightManager.service.annotations  | nindent 4 }}
+spec:
+  type: {{ .Values.insightManager.service.type }}
+  ports:
+      {{-  range .Values.insightManager.service.ports }}
+      - port: {{ .port }}
+        targetPort: {{ .port }}
+        protocol: {{ .protocol }}
+        name: {{ .name }}
+      {{- end }}
+  selector:
+    {{- include "rosita-chatbot.selectorLabels" . | nindent 4 }}
+    component: insight-manager
+  {{- if (and (not (empty .Values.insightManager.service.loadBalancerIP)) (eq $.Values.insightManager.service.type "LoadBalancer")) }}
+  loadBalancerIP: {{ .Values.insightManager.service.loadBalancerIP }}
+  {{- end -}}
