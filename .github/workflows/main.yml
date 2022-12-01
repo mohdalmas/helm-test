@@ -30,3 +30,5 @@ jobs:
     - name: Get the latest source code commit
       env:
         ANALYZER_IMAGE_TAG: ${{ github.sha }}
+      run: |
+        echo "${{env.ANALYZER_IMAGE_TAG}}"
