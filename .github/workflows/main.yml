@@ -1,0 +1,32 @@
+name: Test
+
+env:
+  ANALYZER_IMAGE_TAG: 95d518596532bb876d25d2e8b8878d33bcc5dd1a
+  INSIGHT_IMAGE_TAG: 95d518596532bb876d25d2e8b8878d33bcc5dd1a
+  PROMPT_IMAGE_TAG: 95d518596532bb876d25d2e8b8878d33bcc5dd1a
+  CHATBOT_IMAGE_TAG: 95d518596532bb876d25d2e8b8878d33bcc5dd1a
+  
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment
+        required: true
+        type: choice
+        options:
+        - dev
+  workflow_call:
+     inputs:
+       environment:
+         required: true
+         type: string
+jobs:
+  build:
+    name: Testing
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+    # Checking out to latest commit
+    - name: Get the latest source code commit
+      env:
+        ANALYZER_IMAGE_TAG: ${{ github.sha }}
