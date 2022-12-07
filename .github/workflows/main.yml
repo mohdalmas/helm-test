@@ -29,6 +29,7 @@ jobs:
     # Checking out to latest commit
     - name: Get the latest source code commit
       env:
-        ANALYZER_IMAGE_TAG: ${{ github.sha }}
+        ANALYZER_IMAGE_TAG: "DashMe"
       run: |
+        echo "ANALYZER_IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
         echo "${{env.ANALYZER_IMAGE_TAG}}"
