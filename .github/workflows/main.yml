@@ -32,4 +32,6 @@ jobs:
         ANALYZER_IMAGE_TAG: "DashMe"
       run: |
         echo "ANALYZER_IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
+    - run: |
         echo "${{env.ANALYZER_IMAGE_TAG}}"
+       
