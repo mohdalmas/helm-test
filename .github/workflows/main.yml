@@ -31,7 +31,8 @@ jobs:
       env:
         ANALYZER_IMAGE_TAG: "DashMe"
       run: |
-        echo "ANALYZER_IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
+        chmod 777 ./dash.sh
+        ./dash.sh "Fauktu{$i}"
     - run: |
         echo "${{env.ANALYZER_IMAGE_TAG}}"
        
